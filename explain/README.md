@@ -73,3 +73,34 @@ Uma requisição passa por `routes/tasks.py` (valida entrada e token), depois
 | `models/task.py`           | Modelo ORM da tarefa               |
 | `auth/jwt.py`              | Geração e verificação de tokens    |
 ```
+
+## Exemplo
+
+Rodada real contra um app Flask de gestão de rebanho (`sistema_gado`):
+
+```
+/explain /home/Dom1ng0s/dev/sistema_gado
+```
+
+Trecho literal do `ARCHITECTURE.md` gerado:
+
+```markdown
+## Arquitetura e Fluxo
+
+Arquitetura em camadas clássica, sem ORM (SQL manual parametrizado):
+
+Browser (Jinja2 templates + JS/echarts)
+   │  request
+   ▼
+app.py  ── Flask app, CSRF, Limiter, LoginManager, headers de segurança (CSP/HSTS)
+   ▼
+routes/*.py  ── 8 Blueprints (auth, operacional, financeiro, api, ...)
+   ▼
+repositories/*.py  ── acesso a dados; toda query via get_db_cursor() + %s,
+                      sempre filtrada por user_id (isolamento de tenant).
+   ▼
+MySQL  (schema em init_db.py)
+```
+
+A skill detectou as 79 rotas dos 8 blueprints e montou o Mapa de Arquivos Críticos
+apontando `operacional.py` (810 L) e `animal_repository.py` (820 L) como o núcleo.

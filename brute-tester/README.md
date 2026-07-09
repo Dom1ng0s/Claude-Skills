@@ -56,3 +56,31 @@ python brute-tester/brute_tester.py --demo
 ```
 
 Valida a trava de segurança e a classificação de payloads sem disparar nada na rede.
+
+## Exemplo
+
+Self-check da ferramenta (não toca a rede) e uma sondagem contra um alvo local:
+
+```
+python brute-tester/brute_tester.py --demo
+python brute-tester/brute_tester.py http://localhost:5000/login --intensity light
+```
+
+Saída literal — o `--demo` passa e a sondagem dispara os 14 payloads do arsenal light:
+
+```
+demo OK: trava, classificacao e geracao de payloads funcionam.
+
+Disparando 14 payloads contra http://localhost:5000/login (intensity=light)...
+  json-gigante             -> None
+  tipo-invertido-array     -> None
+  sqli-aspas               -> None
+  xss-script               -> None
+  prompt-injection         -> None
+
+Relatorio: BRUTE_TEST_REPORT.md (0/14 criticos)
+```
+
+Neste caso o servidor-alvo estava **offline** (todos os disparos deram
+`Connection refused`), então `0/14 criticos` **não** significa "seguro" — sobe o app
+e roda de novo. A trava de localhost impede apontar a ferramenta para hosts externos.

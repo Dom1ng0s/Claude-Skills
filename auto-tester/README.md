@@ -65,3 +65,28 @@ Esperado: 400 (a validação deveria rejeitar)
 Teste que expõe: test_create_user_sql_injection
 Sugestão: validar e parametrizar a query antes de executá-la.
 ```
+
+## Exemplo
+
+Rodada real contra a camada de validação de entrada do `sistema_gado`
+(stack detectada: Python + pytest), foco standard + security:
+
+```
+/auto-tester routes/validators.py --focus security
+```
+
+Saída literal da suíte gerada e executada (12 testes, 0 correções necessárias):
+
+```
+test_validators.py::test_campo_obrigatorio_ausente_gera_erro PASSED      [  8%]
+test_validators.py::test_max_len_excedido PASSED                         [ 25%]
+test_validators.py::test_float_com_virgula_e_range PASSED                [ 41%]
+test_validators.py::test_sql_injection_em_str_nao_quebra PASSED          [ 75%]
+test_validators.py::test_payload_gigante_rejeitado_por_tamanho_sem_crash PASSED [ 91%]
+test_validators.py::test_valor_nao_string_nao_quebra PASSED              [100%]
+
+============================== 12 passed in 0.02s ==============================
+```
+
+Nenhum bug real encontrado: a `validate()` rejeita por tamanho/tipo e não estoura
+com SQLi/XSS/payload gigante (o conteúdo é neutralizado depois, pelo `%s` no repo).

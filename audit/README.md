@@ -61,3 +61,27 @@ Sugestões de skill, bugs ou melhorias: abra uma issue ou um PR. Se adicionar um
 ## Licença
 
 [MIT](LICENSE)
+
+## Exemplo
+
+Rodada real contra um app Flask de gestão de rebanho (`sistema_gado`):
+
+```
+/audit /home/Dom1ng0s/dev/sistema_gado
+```
+
+Trecho literal do relatório gerado (achado de maior severidade):
+
+```markdown
+### 1. Vazamento de detalhe de exceção interna na criação de conta
+- **Arquivo:** `routes/auth.py:125`
+- **Severidade:** ⚠️ Média
+- **Problema:** No `except` do `novo_usuario`, a mensagem devolvida ao usuário é
+  `mensagem = f"Erro ao criar conta: {e}"` e vai direto para o template. Cenário de
+  falha concreto: uma falha de constraint do MySQL ou erro de conexão faz `str(e)`
+  conter texto do driver / nomes de tabela/coluna, que é renderizado no formulário
+  para um usuário anônimo (rota pública). Information disclosure.
+```
+
+O código já estava bem endurecido (SQL sempre parametrizado, isolamento por
+`user_id`, CSRF, rate-limit): 3 achados reportados, nada crítico.
