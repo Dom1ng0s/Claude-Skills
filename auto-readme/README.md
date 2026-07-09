@@ -47,26 +47,8 @@ O `README_GENERATED.md` tem seis seções:
 
 Depois de revisar, renomeie para `README.md` se quiser adotá-lo.
 
-## Exemplo
+## Demo
 
-Rodada real contra um app Flask de gestão de rebanho (`sistema_gado`):
+![Demo do /auto-readme](demo.gif)
 
-```
-/auto-readme /home/Dom1ng0s/dev/sistema_gado
-```
-
-Trecho literal do `README_GENERATED.md` gerado (seção de ambiente — variáveis
-extraídas com segurança de `.env-example`, sem ler o `.env` real):
-
-```markdown
-## Configuração de Ambiente
-
-| Variável | Para que serve |
-|----------|----------------|
-| `DB_HOST` / `DB_PORT` / `DB_USER` / `DB_NAME` / `DB_PASSWORD` | Conexão MySQL |
-| `SECRET_KEY` | Chave Flask (sessão/CSRF). Obrigatória em produção |
-| `MAIL_SERVER` / `MAIL_PORT` / `MAIL_USERNAME` / ... | SMTP para recuperação de senha |
-```
-
-A skill detectou a stack pelo `requirements.txt`/`Dockerfile` e deduziu os comandos
-de execução (Docker, nativo e Gunicorn) a partir do `Procfile` e `railway.toml`.
+> `/auto-readme` fazendo uma análise read-only de um app Flask real e gerando o `README_GENERATED.md`.

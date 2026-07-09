@@ -37,3 +37,9 @@ Cada achado passa por um filtro antes de entrar no relatório. A skill lê a fun
 ## Formato do relatório
 
 No máximo dez achados, ordenados por severidade (Crítica, Alta, Média, Baixa). Cada um traz o arquivo e a linha, a severidade, o problema com o cenário de falha, e a solução recomendada com um bloco de código. Se não houver nada relevante, a skill diz isso em uma linha em vez de inventar achados para preencher.
+
+## Demo
+
+![Demo do /audit](demo.gif)
+
+> Rodando `/audit` contra um app Flask real (`sistema_gado`): 3 achados, nada crítico, nada alterado.

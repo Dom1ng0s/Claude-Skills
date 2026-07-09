@@ -66,25 +66,8 @@ Modo: parallel
 - [ ] Gerar build (depende de: 1, 2)
 ```
 
-## Exemplo
+## Demo
 
-Rodada real com um objetivo curto de verificação, em modo serial:
+![Demo do /sub-divider](demo.gif)
 
-```
-/sub-divider "Validar integridade das 7 skills do repositório" --mode serial
-```
-
-Trecho literal do `execution_plan.md` ao final da execução (todas concluídas):
-
-```markdown
-# Plano de Execução: Validar integridade das 7 skills do repositório
-Modo: serial
-
-- [x] Tarefa 1 — Confirmar que as 7 subpastas de skill existem
-- [x] Tarefa 2 — Confirmar que cada subpasta tem `SKILL.md`
-- [x] Tarefa 3 — Confirmar que cada `SKILL.md` tem frontmatter com `name:` e `description:`
-- [x] Tarefa 4 — Confirmar que cada subpasta tem `README.md`
-
-## Resultado
-Todas as 4 subtarefas concluídas (7/7 skills íntegras). Nenhum bloqueio.
-```
+> `/sub-divider` executando um objetivo em modo serial, marcando o checklist conforme conclui.

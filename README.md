@@ -8,6 +8,10 @@ Skills para o [Claude Code](https://claude.com/claude-code) que automatizam audi
 
 Cada skill é uma pasta com um `SKILL.md` (as instruções que o Claude executa) e um `README.md` próprio (documentação de uso). A maioria não é um programa: é um prompt bem desenhado que faz o Claude usar as próprias ferramentas — ler arquivos, buscar padrões, editar código, rodar comandos. A exceção é a `brute-tester`, que roda um script Python isolado por ser um fuzzer ativo.
 
+![Demo do /audit](audit/demo.gif)
+
+> A skill `/audit` auditando um app Flask real. Cada skill tem seu próprio demo no README da pasta.
+
 ## Por que usar
 
 - **Read-only por padrão.** A maioria das skills audita e reporta, não edita seu código sem você pedir.
@@ -62,26 +66,3 @@ Sugestões de skill, bugs ou melhorias: abra uma issue ou um PR. Se adicionar um
 
 [MIT](LICENSE)
 
-## Exemplo
-
-Rodada real contra um app Flask de gestão de rebanho (`sistema_gado`):
-
-```
-/audit /home/Dom1ng0s/dev/sistema_gado
-```
-
-Trecho literal do relatório gerado (achado de maior severidade):
-
-```markdown
-### 1. Vazamento de detalhe de exceção interna na criação de conta
-- **Arquivo:** `routes/auth.py:125`
-- **Severidade:** ⚠️ Média
-- **Problema:** No `except` do `novo_usuario`, a mensagem devolvida ao usuário é
-  `mensagem = f"Erro ao criar conta: {e}"` e vai direto para o template. Cenário de
-  falha concreto: uma falha de constraint do MySQL ou erro de conexão faz `str(e)`
-  conter texto do driver / nomes de tabela/coluna, que é renderizado no formulário
-  para um usuário anônimo (rota pública). Information disclosure.
-```
-
-O código já estava bem endurecido (SQL sempre parametrizado, isolamento por
-`user_id`, CSRF, rate-limit): 3 achados reportados, nada crítico.

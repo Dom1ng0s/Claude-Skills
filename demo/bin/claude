@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+# Reprodução encenada das skills para os GIFs de demo dos READMEs.
+# NÃO executa a skill ao vivo — o VHS grava um shell, não o REPL do Claude Code.
+# Cada bloco reproduz o output REAL gerado contra o sistema_gado (ver scratchpad).
+set -u
+
+d=$'\e[2m'; b=$'\e[1m'; cy=$'\e[36m'; ye=$'\e[33m'; rd=$'\e[31m'
+gn=$'\e[32m'; mg=$'\e[35m'; rs=$'\e[0m'
+p(){ printf '%b\n' "$1"; }
+inv=$1                    # ex.: "/audit ~/dev/sistema_gado"
+skill=${inv%% *}; skill=${skill#/}
+args=${inv#/$skill}
+
+p "${mg}❯${rs} ${b}/$skill${rs}${args}"
+echo
+sleep 0.5
+
+case "$skill" in
+
+audit)
+  p "${gn}⏺${rs} Vou auditar o ${b}sistema_gado${rs} (backend Flask) em busca de bugs,"
+  p "  falhas de segurança e code smells. Reporto, não corrijo."
+  sleep 0.8
+  p "  ${cy}⎿ Glob${rs}  ${d}routes/**, repositories/**  → 24 arquivos${rs}";        sleep 0.6
+  p "  ${cy}⎿ Grep${rs}  ${d}execute( · f\" · format(  → SQL dinâmico${rs}";          sleep 0.6
+  p "  ${cy}⎿ Grep${rs}  ${d}except · debug · secret  → erro/segredos${rs}";          sleep 0.6
+  p "  ${cy}⎿ Read${rs}  ${d}routes/auth.py · routes/api.py · animal_repository.py${rs}"; sleep 0.9
+  echo
+  p "${gn}⏺${rs} ${b}Auditoria concluída — 3 achados, nada crítico.${rs}"
+  p "  ${d}Já endurecido: SQL parametrizado, tenant por user_id, CSRF, rate-limit.${rs}"
+  echo; sleep 0.7
+  p "  ${ye}⚠ Média${rs}  ${b}Vazamento de exceção interna na criação de conta${rs}"
+  p "    ${d}routes/auth.py:125${rs} — ${b}f\"Erro ao criar conta: {e}\"${rs} exposto a usuário anônimo."; sleep 0.9
+  p "  ${cy}🔵 Baixa${rs}  ${b}Enumeração de usuário por timing no login${rs}"
+  p "    ${d}routes/auth.py:45${rs} — hash só roda se o usuário existe; latência denuncia contas."; sleep 0.9
+  p "  ${cy}🔵 Baixa${rs}  ${b}Código de reset de 6 dígitos com brute-force estreito${rs}"
+  p "    ${d}routes/auth.py:172${rs} — 900k combinações, 15 min, sem limite por token."
+  echo; sleep 0.5
+  p "${d}0 achados omitidos · 0 arquivos alterados${rs}"
+  ;;
+
+explain)
+  p "${gn}⏺${rs} Vou mapear a arquitetura do ${b}sistema_gado${rs} e gerar ARCHITECTURE.md."
+  sleep 0.8
+  p "  ${cy}⎿ Glob${rs}  ${d}**/*.py (ignora venv, __pycache__, assets)  → 34 arquivos${rs}"; sleep 0.6
+  p "  ${cy}⎿ Grep${rs}  ${d}@app.route | @*_bp.route  → 79 rotas em 8 blueprints${rs}";       sleep 0.6
+  p "  ${cy}⎿ Read${rs}  ${d}app.py · routes/api.py · repositories/animal_repository.py${rs}"; sleep 0.9
+  echo
+  p "${gn}⏺${rs} ${b}Documentação gerada — ARCHITECTURE.md${rs}"
+  p "  ${d}Gestão de rebanho bovino (Flask 3.1 + MySQL, sem ORM), multi-tenant.${rs}"
+  echo; sleep 0.6
+  p "  ${b}Arquitetura em camadas:${rs}"
+  p "    Browser ${d}(Jinja2 + echarts)${rs}"
+  p "      ${cy}→${rs} app.py            ${d}CSRF · Limiter · Login · CSP/HSTS · scheduler${rs}"
+  p "      ${cy}→${rs} routes/*.py       ${d}8 blueprints (auth, operacional, financeiro, api…)${rs}"
+  p "      ${cy}→${rs} repositories/*.py ${d}SQL parametrizado, sempre filtrado por user_id${rs}"
+  p "      ${cy}→${rs} MySQL"
+  echo; sleep 0.7
+  p "  ${d}Arquivos críticos: operacional.py (810 L) e animal_repository.py (820 L).${rs}"
+  echo; sleep 0.4
+  p "${d}1 arquivo escrito · 0 código alterado${rs}"
+  ;;
+
+sub-divider)
+  p "${gn}⏺${rs} Modo ${b}serial${rs} confirmado. Quebrando o objetivo em subtarefas → ${b}execution_plan.md${rs}"
+  echo; sleep 0.8
+  p "  ${gn}[x]${rs} Tarefa 1 — as 7 subpastas de skill existem";              sleep 0.7
+  p "  ${gn}[x]${rs} Tarefa 2 — cada subpasta tem SKILL.md";                    sleep 0.7
+  p "  ${gn}[x]${rs} Tarefa 3 — cada SKILL.md tem name: e description:";        sleep 0.7
+  p "  ${gn}[x]${rs} Tarefa 4 — cada subpasta tem README.md";                   sleep 0.8
+  echo
+  p "${gn}⏺${rs} ${b}4/4 concluídas · 0 pendentes · 0 bloqueios${rs}"
+  p "  ${d}7/7 skills íntegras. O estado vive no próprio .md (checklist).${rs}"
+  ;;
+
+auto-tester)
+  p "${gn}⏺${rs} Stack detectada: ${b}Python + pytest${rs} ${d}(tests/, conftest.py).${rs}"
+  sleep 0.7
+  p "  ${cy}⎿ Read${rs}   ${d}routes/validators.py  → validate(form, rules)${rs}";         sleep 0.6
+  p "  ${cy}⎿ Write${rs}  ${d}tests/test_validators.py  → 12 testes (standard + security)${rs}"; sleep 0.6
+  p "  ${cy}⎿ Bash${rs}   ${d}pytest tests/test_validators.py -v${rs}";                    sleep 0.9
+  p "    ${gn}test_campo_obrigatorio_ausente_gera_erro   PASSED${rs}";  sleep 0.25
+  p "    ${gn}test_sql_injection_em_str_nao_quebra       PASSED${rs}";  sleep 0.25
+  p "    ${gn}test_payload_gigante_..._sem_crash         PASSED${rs}";  sleep 0.25
+  p "    ${b}============== 12 passed in 0.02s ==============${rs}"
+  echo; sleep 0.7
+  p "${gn}⏺${rs} ${b}12/12 verdes · 0 correções · 0 bugs reais.${rs}"
+  p "  ${d}validate() rejeita por tamanho/tipo; SQLi/XSS não quebram. Código não alterado.${rs}"
+  ;;
+
+brute-tester)
+  p "${gn}⏺${rs} Alvo ${b}localhost${rs} confirmado ${d}(trava de segurança OK).${rs} Disparando 14 payloads…"
+  echo; sleep 0.7
+  p "  ${d}json-gigante          →${rs} ${rd}err (conexão)${rs}";       sleep 0.3
+  p "  ${d}tipo-invertido-array  →${rs} ${rd}err (conexão)${rs}";       sleep 0.3
+  p "  ${d}sqli-aspas            →${rs} ${rd}err (conexão)${rs}";        sleep 0.3
+  p "  ${d}xss-script           →${rs} ${rd}err (conexão)${rs}";        sleep 0.3
+  p "  ${d}prompt-injection     →${rs} ${rd}err (conexão)${rs}";        sleep 0.8
+  echo
+  p "${gn}⏺${rs} ${b}Relatório: BRUTE_TEST_REPORT.md — 0/14 críticos${rs}"
+  p "  ${ye}⚠ Servidor offline (Connection refused):${rs} 0/14 ${b}não${rs} significa \"seguro\"."
+  p "  ${d}Suba o app alvo e rode de novo. A trava impede alvos fora de localhost.${rs}"
+  ;;
+
+auto-readme)
+  p "${gn}⏺${rs} Análise ${b}read-only${rs} ${d}(não leio .env real, não rodo nada).${rs}"
+  sleep 0.7
+  p "  ${cy}⎿ Read${rs}  ${d}requirements.txt · Dockerfile · Procfile · railway.toml${rs}"; sleep 0.6
+  p "  ${cy}⎿ Read${rs}  ${d}.env-example  (variáveis, sem tocar no .env real)${rs}";       sleep 0.6
+  p "  ${cy}⎿ Grep${rs}  ${d}@*_bp.route  → propósito pelas rotas${rs}";                    sleep 0.9
+  echo
+  p "${gn}⏺${rs} ${b}Gerado README_GENERATED.md${rs} ${d}(não sobrescreve o README.md):${rs}"
+  p "  ${b}# 🐂 Sistema Gado${rs}   ${cy}[Python 3.10+] [Flask 3.1] [MySQL] [Docker]${rs}"
+  p "  ${d}Seções: Sobre · Pré-requisitos · Ambiente · Como Executar · Estrutura${rs}"
+  echo; sleep 0.5
+  p "${d}1 arquivo escrito · 0 código alterado${rs}"
+  ;;
+
+pre-deploy-check)
+  p "${gn}⏺${rs} Verificação pré-deploy ${b}(read-only)${rs} — ${b}Python / Flask${rs}"
+  echo; sleep 0.7
+  p "  ${gn}✅ Stack${rs}             ${d}Python 3.10+ / Flask 3.1 (Dockerfile, Gunicorn)${rs}"; sleep 0.5
+  p "  ${gn}✅ Segurança/Estado${rs}  ${d}debug gated por env; sem segredos hardcoded${rs}";     sleep 0.5
+  p "  ${gn}✅ Dependências${rs}      ${d}todos os imports em requirements.txt${rs}";            sleep 0.5
+  p "  ${gn}✅ Scripts de prod${rs}   ${d}gunicorn -c gunicorn.conf.py app:app${rs}";            sleep 0.5
+  p "  ${ye}⚠️  Estado do Git${rs}     ${d}M .gitignore · ?? DOCUMENTATION.md (não commitados)${rs}"; sleep 0.9
+  echo
+  p "${gn}⏺${rs} ${b}Status: PRONTO PARA DEPLOY${rs} ${d}(1 aviso)${rs} → PRE_DEPLOY_REPORT.md"
+  ;;
+
+*)
+  p "${rd}skill desconhecida: $skill${rs}"
+  ;;
+esac
+sleep 0.3

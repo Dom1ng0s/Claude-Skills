@@ -40,25 +40,8 @@ O `PRE_DEPLOY_REPORT.md` tem três partes:
 - **Checklist Detalhado:** tabela dos itens verificados, marcados com PASSOU, AVISO ou FALHOU.
 - **Ações Recomendadas:** para cada falha, qual comando rodar ou o que mudar, adaptado à stack detectada.
 
-## Exemplo
+## Demo
 
-Rodada real contra um app Flask de gestão de rebanho (`sistema_gado`):
+![Demo do /pre-deploy-check](demo.gif)
 
-```
-/pre-deploy-check /home/Dom1ng0s/dev/sistema_gado
-```
-
-Trecho literal do `PRE_DEPLOY_REPORT.md` gerado:
-
-```markdown
-## Resumo do Status
-**Pronto para Deploy** — linguagem principal: **Python / Flask**. Nenhum item FALHOU;
-1 AVISO (working tree com alterações não commitadas).
-
-| Item | Status | Detalhe |
-|------|--------|---------|
-| Identificação da Stack | ✅ PASSOU | Python 3.10+ / Flask 3.1 (Dockerfile). Deploy Gunicorn. |
-| Segurança e Estado | ✅ PASSOU | `app.run(debug=...)` é gated por env e só roda em `__main__`. |
-| Verificação de Dependências | ✅ PASSOU | Todos os imports declarados em `requirements.txt`. |
-| Estado do Git | ⚠️ AVISO | ` M .gitignore` e `?? DOCUMENTATION.md` não commitados. |
-```
+> `/pre-deploy-check` rodando o checklist pré-deploy de um app Flask real: pronto para deploy, com 1 aviso.
